@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- HEAD SECTION -->
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Athlete Gifs Search</title>
+
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Javascript -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- CSS Sheets -->
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Alfa+Slab+One|Roboto:500"
+      rel="stylesheet"
+    />
+  </head>
+
+  <!-- END HEAD SECTION -->
+
+  <!-- BODY SECTION -->
+
+  <body>
+    <!-- <header class="d-flex">
+        <div class="flex-row">
+            <div class="col search-div">
+                <span id="searchtxt">Search For Your Favorite Foods!</span>
+                <input id="search-box" type="text" placeholder="Search..">
+                <input class="btn" id="submitBtn" type="submit" value="Submit">
+            </div>
+        </div>
+    </header>
+    <section class="d-flex">
+        <div class="flex-row">
+            <div class="col" id="btn-sec">
+                <p>This is the Button Section</p>
+            </div>
+        </div>
+    </section>
+    <section class="d-flex">
+        <div class="flex-row">
+            <div class="col" id="gif-sec">
+                <p>This is the Gif Section</p>
+            </div>
+        </div>
+    </section> -->
+
+    <div class="container">
+      <h1>Favorite Athlete Search</h1>
+
+      <!-- Rendered Buttons will get Dumped Here  -->
+      <div id="btn-div"></div>
+
+      <form id="people-search">
+        <label for="people-input">Search Your Favorite Athletes!</label>
+        <input type="text" id="people-input" />
+        <br />
+
+        <!-- Button triggers new movie to be added -->
+        <input
+          id="add-people"
+          type="submit"
+          value="Search Your Favorite Athletes!"
+        />
+      </form>
+
+      <!-- Movies will Get Dumped Here -->
+      <div id="food-div"></div>
+
+      <!-- JAVASCRIPT SECTION -->
+
+      <!-- jQuery CDN -->
+      <script
+        src="http://code.jquery.com/jquery-3.4.0.min.js"
+        integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg="
+        crossorigin="anonymous"
+      ></script>
+      <script type="text/javascript">
+        // Setting a place to add the gifs and info
+        var foodDiv = $("#food-div");
+        // Creating a variable for searches
+        var foods = [
+          "Tiger Woods",
+          "Lewis Hamilton",
+          "Steph Curry",
+          "John Daly",
+          "Giannis Antetokounmpo",
+          "Wayne Simmons",
+          "James Harden",
+          "Ben Hogan",
+          "Allen Iverson"
+        ];
+        // Creating a function to load the gifs
+        function displayGifs() {
+          //
+          var food = $(this).attr("data-name");
+          var queryURL =
+            "http://api.giphy.com/v1/gifs/search?q=" +
+            food +
+            "&api_key=yhwHbVJRxzN358c8CvOs38zbeymIPaRq&limit=10";
+          $.ajax({
+            url: queryURL,
+            method: "GET"
+          }).then(function(response) {
+            // Defines gif data results
+            var results = response.data;
+            // Loop to serach through gif data
+            for (var i = 0; i < results.length; i++) {
+              // Logs gif data to find our parameters (not necessary to run only to find info)
+              console.log(results[i]);
+              // Variable to find rating of the gif
+              var rating = results[i].rating;
+              // creates a paragraph element to add rating in html
+              var pOne = $("<p>").text("Rating: " + rating);
+              foodDiv.append(pOne);
+              // Variable to find gif url
+              var imgURL = results[i].images.fixed_height.url;
+              // Creates img element in html to hold gif img
+              var image = $("<img>").attr("src", imgURL);
+              foodDiv.append(image);
+            }
+          });
+        }
+        // Function for displaying movie data
+        function renderButtons() {
+          // Deleting the movies prior to adding new movies
+          // (this is necessary otherwise you will have repeat buttons)
+          $("#btn-div").empty();
+          // Looping through the array of movies
+          for (var i = 0; i < foods.length; i++) {
+            // Then dynamicaly generating buttons for each movie in the array
+            // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
+            var a = $("<button>");
+            // Adding a class of movie-btn to our button
+            a.addClass("food-btn");
+            // Adding a data-attribute
+            a.attr("data-name", foods[i]);
+            // Providing the initial button text
+            a.text(foods[i]);
+            // Adding the button to the buttons-view div
+            $("#btn-div").append(a);
+          }
+        }
+        // This function handles events where a movie button is clicked
+        $("#add-food").on("click", function(event) {
+          event.preventDefault();
+          // This line grabs the input from the textbox
+          var food = $("#food-input")
+            .val()
+            .trim();
+          // Adding movie from the textbox to our array
+          foods.push(food);
+          // Calling renderButtons which handles the processing of our movie array
+          renderButtons();
+        });
+        // Adding a click event listener to all elements with a class of "movie-btn"
+        $(document).on("click", ".food-btn", displayGifs);
+        // Calling the renderButtons function to display the intial buttons
+        renderButtons();
+      </script>
+    </div>
+  </body>
+</html>
